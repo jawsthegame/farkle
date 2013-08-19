@@ -3,12 +3,16 @@ $     = require 'jqueryify'
 
 
 class Game
+  score: 0
 
   start: ->
     pool = new Pool
 
-    $(document).ready ->
-      $('#roll').click ->
+    $(document).ready =>
+      $('#roll').click =>
+        score = pool.score()
+        $('#score').text(score)
+
         $('.die').removeClass 'held'
         pool.roll()
         for value, i in (d.value for d in pool.dice)
@@ -24,11 +28,6 @@ class Game
           die = pool.dice[$die.data('die')]
           if die in pool.held
             $die.addClass 'held'
-
-        score = pool.score()
-        $('#score').text(score)
-        if pool.isFarkle()
-          alert("FARKLE!!!")
 
       $('.die').click (e) ->
         $die = $(e.currentTarget)
