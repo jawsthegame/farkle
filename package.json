@@ -1,0 +1,10 @@
+{
+  "name": "farkle",
+  "version": "0.0.0",
+  "description": "",
+  "dependencies": {
+    "coffee-script":  "1.6.3",
+    "hem":            "0.3.2",
+    "jqueryify":      "2.0.0"
+  }
+}

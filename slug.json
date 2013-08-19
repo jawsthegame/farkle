@@ -1,0 +1,17 @@
+{
+  "server": {
+    "port": 9004
+  },
+  "routes": [
+    { "": "./public" }
+  ],
+  "packages": {
+    "farkle": {
+      "modules": [
+        "jqueryify"
+      ],
+      "paths":  ["./app"],
+      "target": "./public/farkle.js"
+    }
+  }
+}
