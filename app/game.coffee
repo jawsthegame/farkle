@@ -8,31 +8,35 @@ class Game
     pool = new Pool
 
     $(document).ready ->
-      dice = [
-        $('#die1'),
-        $('#die2'),
-        $('#die3'),
-        $('#die4'),
-        $('#die5')
-      ]
-
       $('#roll').click ->
+        $('.die').removeClass 'held'
         pool.roll()
-        for value, i in pool.rolled
-          dice[i].text(value)
-          dice[i].removeClass 'one'
-          dice[i].removeClass 'five'
+        for value, i in (d.value for d in pool.dice)
+          $die = $(".die[data-die=#{i}]")
+          $die.text(value)
+          $die.removeClass 'one'
+          $die.removeClass 'five'
           if value is 1
-            dice[i].addClass 'one'
+            $die.addClass 'one'
           if value is 5
-            dice[i].addClass 'five'
+            $die.addClass 'five'
+
+          die = pool.dice[$die.data('die')]
+          if die in pool.held
+            $die.addClass 'held'
 
         score = pool.score()
         $('#score').text(score)
+        if pool.isFarkle()
+          alert("FARKLE!!!")
 
       $('.die').click (e) ->
-        die = $(e.currentTarget)
-        if die.hasClass('one') or die.hasClass('five')
-          die.toggleClass 'held'
+        $die = $(e.currentTarget)
+        die = pool.dice[$die.data('die')]
+        if not die.locked
+          if $die.hasClass('one') or $die.hasClass('five')
+            $die.toggleClass 'held'
+            pool.hold(die)
+
 
 module.exports = Game

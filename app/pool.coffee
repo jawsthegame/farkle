@@ -1,27 +1,38 @@
+Die = require 'die'
+
+
 class Pool
 
+  dice: []
   rolled: []
   held: []
 
   roll: ->
+    @pool = []
     @rolled = []
     diceToRoll = 5 - @held.length
+    for die in @held
+      die.locked = true
     for i in [0...diceToRoll]
-      @rolled.push Math.floor((Math.random() * 6) + 1)
+      die = new Die().roll()
+      @rolled.push die
+    @dice = @held.concat @rolled
 
-  hold: (indexes) ->
-    for i in indexes
-      held.push rolled[i]
+  hold: (die) ->
+    if die in @held
+      @held.splice @held.indexOf(die), 1
+    else
+      @held.push die
 
   score: ->
     score = 0
 
-    ones    = (d for d in @rolled when d is 1).length
-    twos    = (d for d in @rolled when d is 2).length
-    threes  = (d for d in @rolled when d is 3).length
-    fours   = (d for d in @rolled when d is 4).length
-    fives   = (d for d in @rolled when d is 5).length
-    sixes   = (d for d in @rolled when d is 6).length
+    ones    = (d for d in @dice when d.value is 1).length
+    twos    = (d for d in @dice when d.value is 2).length
+    threes  = (d for d in @dice when d.value is 3).length
+    fours   = (d for d in @dice when d.value is 4).length
+    fives   = (d for d in @dice when d.value is 5).length
+    sixes   = (d for d in @dice when d.value is 6).length
 
     counts = [ones, twos, threes, fours, fives, sixes]
 
@@ -43,7 +54,9 @@ class Pool
 
     score
 
-  isFarkle: -> @rolled.length and 1 not in @rolled and 5 not in @rolled
+  isFarkle: ->
+    rolled = (d.value for d in @rolled)
+    rolled.length and 1 not in rolled and 5 not in rolled
 
 
 module.exports = Pool
